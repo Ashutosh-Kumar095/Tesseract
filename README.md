@@ -1,2 +1,1 @@
-# Tesseract
-This is a course era test repository.
+This is a react app deployment test.
