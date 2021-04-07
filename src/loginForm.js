@@ -36,28 +36,32 @@ const handleSubmit=(e)=>{
      if(email.value)
     {
         setEmailError(false)
-        reqObj.email=name.value
+        reqObj.email=email.value
     }
     else
     {
         setEmailError(true)
     }
     if(password.value)
-        {
+    {
             setPasswordError(false)
             reqObj.password=password.value
-        }
+    }
     else
     {
         setPasswordError(true)
     } 
-    if(!nameError && !passwordError && !emailError)
+    if(name.value && email.value && password.value)
     {
         axios.post('http://exptest-env.eba-vpud9n93.us-east-2.elasticbeanstalk.com/api/createAdmin',reqObj).then((result)=>{
             dispatch(login(result))
         }).catch(()=>{
             console.log('error occured');
-            const errObj={errorMessage:'Some Internal Server Error Occured'}
+            const errObj={
+                data:{
+                    errorMessage:'Some internal server error occured.'
+                }
+            }
             dispatch(login(errObj))
         })
     }
@@ -67,24 +71,24 @@ return (
     <>
     <Form className="col-md-4 offset-md-4 form-class" onSubmit={handleSubmit}>
     <Card>
-    <Card.Title className='card-title'>Admin Login/Registration Page.</Card.Title>
+    <Card.Title className='card-title form-header-labels'>Admin Login/Registration Page.</Card.Title>
     <Card.Body>
     <FormGroup>
-            <Form.Label>Name *:</Form.Label>
+            <Form.Label className="form-header-labels">Name *:</Form.Label>
             <Form.Control type="text" placeholder="Enter the name." 
             name="name" onChange={onChange} value={inputs.name}
             className={nameError && 'form-error'}
             />
         </FormGroup>
         <FormGroup >
-            <Form.Label>Email *:</Form.Label>
+            <Form.Label className="form-header-labels">Email *:</Form.Label>
             <Form.Control type="email" placeholder="example@email.com" 
             name="email" value={inputs.email} onChange={onChange}
             className={emailError && 'form-error'}
             />
         </FormGroup>
         <FormGroup >
-            <Form.Label>Password *:</Form.Label>
+            <Form.Label className="form-header-labels">Password *:</Form.Label>
             <Form.Control type="password" placeholder="Enter the password." name="password" 
             value={inputs.password} onChange={onChange}
             className={passwordError && 'form-error'}
