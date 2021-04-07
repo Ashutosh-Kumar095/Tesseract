@@ -1,9 +1,8 @@
-import counter from './counter';
-import test from './test';
 import {combineReducers} from 'redux';
+import {loginReducer} from './loginReducer';
 
 const allReducer=combineReducers({
-    counter,test
+    loginReducer
 });
 
 export default allReducer;

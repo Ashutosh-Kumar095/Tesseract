@@ -2,34 +2,51 @@ import logo from './logo.svg';
 import './App.css';
 import { useState,useEffect } from 'react';
 import ReactChild from './reactChild';
-import { useSelector,useDispatch } from 'react-redux';
-import { decrement, increment } from './action/actions';
+import { useSelector} from 'react-redux';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import LoginForm from './loginForm';
+import { useCookies } from 'react-cookie';
+import Tesseract from './tesseract';
+
 
 function App() {
-  const counter=useSelector(state=>state.counter)
-  const [mount,setMount]=useState(false);
-  const dispatch=useDispatch();
-  const mountChild=()=>{
-    console.log('---->',counter);
-    console.log('clicked');
-    setMount(true);
-  }
-  // useEffect(()=>{
-  //   console.log('counter is--->',counter);  //use specifically to detect a state change and set some state
-  //   console.log('mount is---->',mount);
-  // },[counter.counter])
+  const [loggedIn,setLoggedIn]=useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
+  const tokenPayload=useSelector(state=>state.loginReducer);
+  useEffect(()=>{
+    if(!cookies.token)
+    {
+      console.log('in if');
+      setLoggedIn(false)
+    }
+    else
+    {
+      console.log('in else');
+      setLoggedIn(true)  
+    }
+      
+  },[])
+  useEffect(()=>{
+    console.log('api resp');
+    if(tokenPayload.token.status===200)
+    {
+      console.log('--------->',tokenPayload.token.data.token);
+      setLoggedIn(true)
+      setCookie('token',tokenPayload.token.data.token);
+    }
+  },[
+    tokenPayload
+  ])
   return (
-    <div className="App">
-      <h3>Testing React Reducer with a count {counter.counter}.</h3>
-      <br/>
-      <button onClick={()=>{
-        dispatch({type:'INCREMENT'})
-      }}>+</button>
-      <button onClick={()=>{
-        dispatch({type:'DECREMENT'})
-      }}>-</button>
-      </div>
-  );
+    <>
+    {
+     loggedIn && 
+     <Tesseract/>
+     ||
+     <LoginForm/>
+    }
+    </>
+  )
 }
 
 export default App;
